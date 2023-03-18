@@ -73,14 +73,14 @@ class Log:
 		_log(level, message, function_name)
 	
 	func _log(level, message, function_name = ""):
-		if(function_name.empty()):
+		if(function_name == ""):
 			function_name = current_function_name
 		var log_message = LOG_FORMAT.format({"level": level, "current_time": _get_current_time(), "script_name": script_name, "function_name": function_name, "msg": message})
 		print(log_message)
 		file_writer.write(log_message)
 	
 	func _get_current_time():
-		var date_time = OS.get_datetime()
+		var date_time = Time.get_datetime_dict_from_system()
 		var padding = 2
 		_pad_zeros_in_dictionary(date_time, padding)
 		
@@ -98,24 +98,22 @@ class FileWriter:
 	var full_file_path= ""
 	
 	func _init(file_path, file_name):
-		self.full_file_path = file_path  + _get_current_time() + "-" + file_name + ".log"
-		self.file = File.new()
-		
+		self.full_file_path = file_path  + _get_current_time() + "-" + file_name + ".log"		
 		_create_file_if_not_exist()
 	
 	func _create_file_if_not_exist():
-		if(!file.file_exists(full_file_path)):
-			file.open(full_file_path, File.WRITE)
-			file.close()
+		if(!FileAccess.file_exists(full_file_path)):
+			self.file = FileAccess.open(full_file_path, FileAccess.WRITE)
+			self.file.close()
 	
 	func write(log_line):
-		self.file.open(full_file_path, File.READ_WRITE)
+		self.file = FileAccess.open(full_file_path, FileAccess.READ_WRITE)
 		self.file.seek_end()
 		self.file.store_line(log_line + "\n\r")
 		self.file.close()
 	
 	func _get_current_time(): 
-		var date_time = OS.get_datetime()
+		var date_time = Time.get_date_dict_from_system()
 		var padding = 2
 		_pad_zeros_in_dictionary(date_time, padding)
 		var time_format = "{year}-{month}-{day}"
