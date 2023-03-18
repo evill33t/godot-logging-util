@@ -2,7 +2,7 @@
 
 ![](icon.png)
 
-A logging util for Godot Engine 3.0
+A logging util for Godot Engine 4.x
 
 ## Features
 
